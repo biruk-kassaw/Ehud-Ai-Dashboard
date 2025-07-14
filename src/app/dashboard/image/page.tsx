@@ -6,28 +6,65 @@ import { ImageIcon, Palette, Circle, Sparkles } from "lucide-react"
 import { useState } from "react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Cpu } from "lucide-react"
+import { generateImage, type GeneratedImage } from "@/lib/api/image-generation"
+import Image from "next/image"
 
 export default function ImagePage() {
   const [prompt, setPrompt] = useState("")
   const [isGenerating, setIsGenerating] = useState(false)
-  const [selectedModel, setSelectedModel] = useState("Flux")
+  const [selectedModel, setSelectedModel] = useState('gpt-image-1')
+  const [generatedImages, setGeneratedImages] = useState<GeneratedImage[]>([])
+  const [error, setError] = useState<string>('')
   const [aspectRatio, setAspectRatio] = useState("1:1")
   const [numImages, setNumImages] = useState("1")
 
   const models = [
-    { value: "chatgpt-image", label: "ChatGPT Image", description: "Advanced AI image generation" },
+    { value: "gpt-image-1", label: "GPT Image 1", description: "Advanced AI image generation" },
     { value: "imagen-4", label: "Imagen 4", description: "Google's latest image model" },
     { value: "flux", label: "Flux", description: "High-quality image generation" },
   ]
 
+  const getAspectRatio = (aspectRatio: string) => {
+    switch (aspectRatio) {
+      case '1024x1024':
+        return '1:1'
+      case '1024x1536':
+        return '16:9'
+      case '1536x1024':
+        return '9:16'
+      default:
+        return ''
+    }
+  }
+
+  const getAspectRatioValue = (ratio: string) => {
+    switch (ratio) {
+      case '1:1':
+        return '1024x1024';
+      case '16:9':
+        return '1024x1536';
+      case '9:16':
+        return '1536x1024';
+      default:
+        return '1024x1024';
+    }
+  };
+
   const handleGenerate = async () => {
-    if (prompt.trim()) {
-      setIsGenerating(true)
-      setTimeout(() => {
-        setIsGenerating(false)
-        console.log("Generating image with prompt:", prompt)
-        console.log("Using model:", selectedModel)
-      }, 3000)
+    setIsGenerating(true)
+    setError('')
+    try {
+      const response = await generateImage({
+        prompt: prompt,
+        aspectRatio: getAspectRatioValue(aspectRatio),
+        model: selectedModel,
+        n: parseInt(numImages)
+      })
+      setGeneratedImages(response.imageData)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to generate image')
+    } finally {
+      setIsGenerating(false)
     }
   }
 
@@ -68,7 +105,7 @@ export default function ImagePage() {
                       {models.map((model) => (
                         <SelectItem
                           key={model.value}
-                          value={model.label}
+                          value={model.value}
                           className="cursor-pointer hover:bg-gray-50/80 focus:bg-gray-50/80  mx-1 my-0.5"
                         >
                           <div className="flex flex-col">
@@ -169,7 +206,13 @@ export default function ImagePage() {
           </div>
         </div>
 
-        {isGenerating && (
+        {error && (
+          <div className="bg-red-50 border border-red-200 p-4 mt-4">
+            <p className="text-red-600 text-sm">{error}</p>
+          </div>
+        )}
+
+        {isGenerating ? (
           <div className="bg-white/95 backdrop-blur-sm shadow-lg border border-gray-200 p-8">
             <div className="flex items-center justify-center h-64">
               <div className="text-center space-y-4">
@@ -177,6 +220,49 @@ export default function ImagePage() {
                 <p className="text-sm sm:text-base text-gray-600">Using {selectedModel} model...</p>
               </div>
             </div>
+          </div>
+        ) : generatedImages.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+            {generatedImages.map((image, index) => (
+              <div key={index} className="bg-white shadow-md overflow-hidden">
+                <div className="aspect-square relative">
+                  <Image
+                    src={`data:image/png;base64,${image.b64_json}`}
+                    alt={image.prompt}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="p-4 space-y-3">
+                  <p className="text-sm text-gray-600">Prompt: {image.prompt}</p>
+                  <div className="flex justify-between text-xs text-gray-500">
+                    <span>Aspect Ratio: {getAspectRatio(image.aspectRatio)}</span>
+                    <span>Model: {image.model}</span>
+                  </div>
+                  <p className="text-xs text-gray-500">
+                    Generated: {new Date(image.generatedAt).toLocaleString()}
+                  </p>
+                  <button
+                    onClick={() => {
+                      const link = document.createElement('a');
+                      link.href = `data:image/png;base64,${image.b64_json}`;
+                      link.download = `generated-image-${image.group}-${index + 1}.png`;
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                    }}
+                    className="w-full mt-2 flex items-center justify-center gap-2 px-3 py-2 bg-black text-white hover:bg-black/90 cursor-pointer text-sm font-medium transition-colors"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="7 10 12 15 17 10" />
+                      <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    Download
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>
