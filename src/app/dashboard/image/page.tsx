@@ -6,7 +6,7 @@ import { ImageIcon, Palette, Circle, Sparkles, Plus, X } from "lucide-react"
 import { useState, useRef } from "react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Cpu } from "lucide-react"
-import { generateImage, generateRunwayImage, type GeneratedImage } from "@/lib/api/image-generation"
+import { generateImage, generateRunwayImage, generateFluxImage, type GeneratedImage } from "@/lib/api/image-generation"
 import Image from "next/image"
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 
@@ -105,12 +105,17 @@ export default function ImagePage() {
         return;
       }
 
-      const response = await generateImage({
+      const imageRequest = {
         prompt: prompt,
         aspectRatio: getAspectRatioValue(aspectRatio),
         model: selectedModel,
         n: parseInt(numImages)
-      })
+      };
+
+      const response = selectedModel === 'flux'
+        ? await generateFluxImage(imageRequest)
+        : await generateImage(imageRequest);
+
       setGeneratedImages(response.imageData)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to generate image')

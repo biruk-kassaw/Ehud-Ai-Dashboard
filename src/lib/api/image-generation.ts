@@ -52,3 +52,13 @@ export const generateRunwayImage = async (data: RunwayGenerateRequest): Promise<
     throw error;
   }
 };
+
+export const generateFluxImage = async (data: GenerateImageRequest): Promise<GenerateImageResponse> => {
+  try {
+    const response = await axiosInstance.post<GenerateImageResponse>('/generate-flux-image', data);
+    return response.data;
+  } catch (error) {
+    console.error('Error generating Flux image:', error);
+    throw error;
+  }
+};
