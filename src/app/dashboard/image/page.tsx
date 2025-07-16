@@ -2,12 +2,19 @@
 
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { ImageIcon, Palette, Circle, Sparkles } from "lucide-react"
-import { useState } from "react"
+import { ImageIcon, Palette, Circle, Sparkles, Plus, X } from "lucide-react"
+import { useState, useRef } from "react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Cpu } from "lucide-react"
-import { generateImage, type GeneratedImage } from "@/lib/api/image-generation"
+import { generateImage, generateRunwayImage, type GeneratedImage } from "@/lib/api/image-generation"
 import Image from "next/image"
+import { Dialog, DialogContent } from "@/components/ui/dialog"
+
+interface UploadedImage {
+  id: string;
+  base64: string;
+  tag: string;
+}
 
 export default function ImagePage() {
   const [prompt, setPrompt] = useState("")
@@ -17,11 +24,19 @@ export default function ImagePage() {
   const [error, setError] = useState<string>('')
   const [aspectRatio, setAspectRatio] = useState("1:1")
   const [numImages, setNumImages] = useState("1")
+  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([])
+  const [selectedImage, setSelectedImage] = useState<UploadedImage | null>(null)
+  const [showAutocomplete, setShowAutocomplete] = useState(false)
+  const [cursorPosition, setCursorPosition] = useState({ top: 0, left: 0 })
+  const [filteredImages, setFilteredImages] = useState<UploadedImage[]>([])
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const models = [
     { value: "gpt-image-1", label: "GPT Image 1", description: "Advanced AI image generation" },
     { value: "imagen-4", label: "Imagen 4", description: "Google's latest image model" },
     { value: "flux", label: "Flux", description: "High-quality image generation" },
+    { value: "runway", label: "Runway", description: "Reference-based image generation" },
   ]
 
   const getAspectRatio = (aspectRatio: string) => {
@@ -50,10 +65,46 @@ export default function ImagePage() {
     }
   };
 
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64 = reader.result as string;
+        const nextId = uploadedImages.length + 1;
+        setUploadedImages(prev => [...prev, {
+          id: `IMG_${nextId}`,
+          base64: base64.split(',')[1],
+          tag: `IMG_${nextId}`
+        }]);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleGenerate = async () => {
     setIsGenerating(true)
     setError('')
     try {
+      if (selectedModel === 'runway') {
+        // Extract referenced images from the prompt
+        const referenceImages = uploadedImages
+          .filter(img => prompt.includes(`@${img.tag}`))
+          .map(img => ({
+            uri: `data:image/png;base64,${img.base64}`,
+            tag: img.tag
+          }));
+
+        const response = await generateRunwayImage({
+          model: 'gen4_image',
+          ratio: '1920:1080',
+          promptText: prompt,
+          referenceImages
+        });
+        setGeneratedImages(response.imageData);
+        return;
+      }
+
       const response = await generateImage({
         prompt: prompt,
         aspectRatio: getAspectRatioValue(aspectRatio),
@@ -77,6 +128,27 @@ export default function ImagePage() {
 
   return (
     <div className="flex-1 flex flex-col items-center justify-center min-h-screen p-6">
+      <input
+        type="file"
+        ref={fileInputRef}
+        className="hidden"
+        accept="image/*"
+        onChange={handleImageUpload}
+      />
+      <Dialog open={!!selectedImage} onOpenChange={() => setSelectedImage(null)}>
+        <DialogContent className="max-w-4xl">
+          {selectedImage && (
+            <div className="relative aspect-video">
+              <Image
+                src={`data:image/png;base64,${selectedImage.base64}`}
+                alt={selectedImage.tag}
+                fill
+                className="object-contain"
+              />
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
       <div className="w-full max-w-5xl space-y-6 sm:space-y-8 px-4 sm:px-0">
         {/* Header */}
         <div className="text-center px-4">
@@ -91,6 +163,34 @@ export default function ImagePage() {
         {/* Main Content */}
         <div className="bg-white/95 backdrop-blur-sm shadow-lg border border-gray-200 p-4 sm:p-6 lg:p-8">
           <div className="space-y-4 sm:space-y-6">
+            {selectedModel === 'runway' && uploadedImages.length > 0 && (
+              <div className="flex gap-2 overflow-x-auto py-2">
+                {uploadedImages.map((img) => (
+                  <div key={img.id} className="relative group">
+                    <div className="flex flex-col items-center gap-1">
+                      <div 
+                        className="w-16 h-16 relative cursor-pointer"
+                        onClick={() => setSelectedImage(img)}
+                      >
+                        <Image
+                          src={`data:image/png;base64,${img.base64}`}
+                          alt={img.tag}
+                          fill
+                          className="object-cover rounded"
+                        />
+                      </div>
+                      <span className="text-xs text-gray-600">{img.tag}</span>
+                    </div>
+                    <button
+                      className="absolute -top-2 -right-2 bg-black rounded-full p-1 hidden group-hover:block"
+                      onClick={() => setUploadedImages(prev => prev.filter(i => i.id !== img.id))}
+                    >
+                      <X className="w-3 h-3 text-white" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
             {/* Top Controls Row */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4 sm:mb-6">
               {/* Model Selection */}
@@ -161,13 +261,84 @@ export default function ImagePage() {
             </div>
             <div className="relative">
               <Textarea
+                ref={textareaRef}
+                placeholder="Describe the image you want to generate..."
+                className="min-h-[100px] resize-none"
                 value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                placeholder="Describe an image and click generate..."
-                className="min-h-24 sm:min-h-32 text-sm sm:text-base bg-gray-50 border-gray-200  sm resize-none placeholder:text-gray-400 focus:bg-white focus:border-gray-300 w-full"
+                onChange={(e) => {
+                  setPrompt(e.target.value);
+                  const lastAtSymbol = e.target.value.lastIndexOf('@');
+                  if (lastAtSymbol !== -1) {
+                    const searchTerm = e.target.value.slice(lastAtSymbol + 1).toLowerCase();
+                    const filtered = uploadedImages.filter(img => 
+                      img.tag.toLowerCase().includes(searchTerm)
+                    );
+                    setFilteredImages(filtered);
+                    setShowAutocomplete(true);
+                    
+                    // Calculate cursor position
+                    const textarea = textareaRef.current;
+                    if (textarea) {
+                      const { selectionStart } = textarea;
+                      const textBeforeCursor = e.target.value.substring(0, selectionStart);
+                      const lines = textBeforeCursor.split('\n');
+                      const currentLineNumber = lines.length - 1;
+                      const currentLine = lines[currentLineNumber];
+                      
+                      const lineHeight = 24; // Approximate line height in pixels
+                      const charWidth = 8;  // Approximate character width in pixels
+                      
+                      setCursorPosition({
+                        top: (currentLineNumber + 1) * lineHeight,
+                        left: currentLine.length * charWidth
+                      });
+                    }
+                  } else {
+                    setShowAutocomplete(false);
+                  }
+                }}
               />
+              {showAutocomplete && (
+                <div 
+                  className="absolute bg-white shadow-lg rounded-md p-2 z-50 max-h-48 overflow-y-auto"
+                  style={{ top: cursorPosition.top, left: cursorPosition.left }}
+                >
+                  {filteredImages.map((img) => (
+                    <div
+                      key={img.id}
+                      className="flex items-center gap-2 p-2 hover:bg-gray-100 cursor-pointer"
+                      onClick={() => {
+                        const lastAtSymbol = prompt.lastIndexOf('@');
+                        const newPrompt = prompt.substring(0, lastAtSymbol) + '@' + img.tag + ' ' + prompt.substring(lastAtSymbol + img.tag.length + 1);
+                        setPrompt(newPrompt);
+                        setShowAutocomplete(false);
+                      }}
+                    >
+                      <div className="w-8 h-8 relative">
+                        <Image
+                          src={`data:image/png;base64,${img.base64}`}
+                          alt={img.tag}
+                          fill
+                          className="object-cover rounded"
+                        />
+                      </div>
+                      <span>{img.tag}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {selectedModel === 'runway' && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="icon"
+                  className="absolute bottom-3 left-3 rounded-full"
+                  onClick={() => fileInputRef.current?.click()}
+                >
+                  <Plus className="h-4 w-4" />
+                </Button>
+              )}
             </div>
-
             <div className="space-y-4">
               {/* Style Options Row */}
               <div className="flex flex-wrap items-center gap-2 sm:gap-3">
