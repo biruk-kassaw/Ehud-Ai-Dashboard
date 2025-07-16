@@ -7,6 +7,7 @@ import {
   ImageIcon,
   Video,
   FolderOpen,
+  Edit2
 } from 'lucide-react';
 
 const routes = [
@@ -24,6 +25,11 @@ const routes = [
     label: 'Image Generation',
     icon: ImageIcon,
     href: '/dashboard/image',
+  },
+  {
+    label: 'Edit Image',
+    icon: Edit2,
+    href: '/dashboard/edit-image',
   },
   {
     label: 'Video Generation',
