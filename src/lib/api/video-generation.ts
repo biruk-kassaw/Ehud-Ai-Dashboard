@@ -1,11 +1,12 @@
 import axiosInstance from '@/lib/axios';
 
 export interface GenerateVideoRequest {
-  images: string[];
+  isImageToVideo: boolean;
+  image: string;
   prompt: string;
   negativePrompt?: string;
-  model?: string;
-  duration?: number;
+  model: string;
+  duration: number;
 }
 
 export interface GeneratedVideo {

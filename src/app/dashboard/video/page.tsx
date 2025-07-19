@@ -18,7 +18,7 @@ export default function VideoPage() {
   const [duration, setDuration] = useState('5')
   const [generatedVideos, setGeneratedVideos] = useState<GeneratedVideo[]>([])
   const [error, setError] = useState<string>('')
-  const [selectedImages, setSelectedImages] = useState<{ file: File; preview: string }[]>([])
+  const [selectedImage, setSelectedImage] = useState<{ file: File; preview: string } | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const models = [
@@ -28,59 +28,51 @@ export default function VideoPage() {
   ]
 
   const handleImageSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files || [])
-    if (selectedImages.length + files.length > 4) {
-      setError('Maximum 4 images allowed')
-      return
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    if (selectedImage) {
+      URL.revokeObjectURL(selectedImage.preview)
     }
 
-    const newImages = files.map(file => ({
+    setSelectedImage({
       file,
       preview: URL.createObjectURL(file)
-    }))
-
-    setSelectedImages(prev => [...prev, ...newImages])
+    })
     setError('')
   }
 
-  const removeImage = (index: number) => {
-    setSelectedImages(prev => {
-      const newImages = [...prev]
-      URL.revokeObjectURL(newImages[index].preview)
-      newImages.splice(index, 1)
-      return newImages
-    })
+  const removeImage = () => {
+    if (selectedImage) {
+      URL.revokeObjectURL(selectedImage.preview)
+      setSelectedImage(null)
+      // Reset the file input so the same file can be selected again
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ''
+      }
+    }
   }
 
   const handleGenerateVideo = async () => {
-    if (selectedImages.length === 0) {
-      setError('Please select at least one image')
-      return
-    }
-
     setIsGenerating(true)
     setError('')
 
     try {
-      // Convert images to base64
-      const base64Images = await Promise.all(
-        selectedImages.map(async ({ file }) => {
-          return new Promise<string>((resolve, reject) => {
-            const reader = new FileReader()
-            reader.onload = () => resolve(reader.result as string)
-            reader.onerror = reject
-            reader.readAsDataURL(file)
-          })
+      let base64Image = '';
+      if (selectedImage) {
+        base64Image = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader()
+          reader.onload = () => {
+            const result = reader.result as string
+            resolve(result.split(',')[1]) // Remove data URL prefix
+          }
+          reader.onerror = reject
+          reader.readAsDataURL(selectedImage.file)
         })
-      )
-
-      // Extract just the base64 data without the data URL prefix
-      const cleanBase64Images = base64Images.map(base64 => 
-        base64.split(',')[1]
-      )
-
+      }
       const requestData: GenerateVideoRequest = {
-        images: cleanBase64Images,
+        isImageToVideo: base64Image ? true : false,
+        image: base64Image,
         prompt,
         model: selectedModel,
         duration: parseInt(duration),
@@ -161,23 +153,22 @@ export default function VideoPage() {
             {/* Image Upload Section */}
             <div className="space-y-4">
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                {selectedImages.map((image, index) => (
-                  <div key={index} className="relative aspect-square">
+                {selectedImage ? (
+                  <div className="relative aspect-square">
                     <Image
-                      src={image.preview}
-                      alt={`Selected image ${index + 1}`}
+                      src={selectedImage.preview}
+                      alt="Selected image"
                       fill
                       className="object-cover rounded-lg"
                     />
                     <button
-                      onClick={() => removeImage(index)}
+                      onClick={removeImage}
                       className="absolute -top-2 -right-2 p-1 bg-red-500 rounded-full text-white hover:bg-red-600"
                     >
                       <X className="w-4 h-4" />
                     </button>
                   </div>
-                ))}
-                {selectedImages.length < 4 && (
+                ) : (
                   <button
                     onClick={() => fileInputRef.current?.click()}
                     className="aspect-square flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg hover:border-gray-400 transition-colors"
@@ -190,7 +181,6 @@ export default function VideoPage() {
                 ref={fileInputRef}
                 type="file"
                 accept="image/*"
-                multiple
                 onChange={handleImageSelect}
                 className="hidden"
               />
@@ -216,7 +206,7 @@ export default function VideoPage() {
             <div className="flex justify-end">
               <Button
                 onClick={handleGenerateVideo}
-                disabled={!prompt.trim() || isGenerating || selectedImages.length === 0}
+                disabled={prompt.trim().length < 5 || isGenerating}
                 className="flex items-center justify-center gap-2 h-11 sm:h-12 px-6 sm:px-8 bg-black hover:bg-gray-800 text-white font-medium text-sm sm:text-base min-w-[140px] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
