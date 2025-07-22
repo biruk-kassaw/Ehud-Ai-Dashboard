@@ -6,7 +6,7 @@ import { Video, Cpu, Sparkles, Upload, X, Clock } from "lucide-react"
 import { useState, useRef } from "react"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import Image from "next/image"
-import { generateVideo, type GenerateVideoRequest, type GeneratedVideo } from "@/lib/api/video-generation"
+import { generateVideo, generateVeoVideo, type GenerateVideoRequest, type GeneratedVideo } from "@/lib/api/video-generation"
 
 
 
@@ -82,7 +82,10 @@ export default function VideoPage() {
         requestData.negativePrompt = negativePrompt
       }
 
-      const response = await generateVideo(requestData)
+      const response = await (selectedModel === 'veo-2' || selectedModel === 'veo-3' 
+        ? generateVeoVideo(requestData)
+        : generateVideo(requestData))
+
       setGeneratedVideos(prev => [{
         ...response.videoData
       }, ...prev])

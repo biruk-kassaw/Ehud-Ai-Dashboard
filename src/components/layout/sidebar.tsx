@@ -7,7 +7,12 @@ import {
   ImageIcon,
   Video,
   FolderOpen,
-  Edit2
+  Edit2,
+  Volume,
+  Mic,
+  Minus,
+  Maximize2,
+  Folder
 } from 'lucide-react';
 
 const routes = [
@@ -22,19 +27,44 @@ const routes = [
     href: '/dashboard/chat',
   },
   {
-    label: 'Image Generation',
+    label: 'Image',
     icon: ImageIcon,
     href: '/dashboard/image',
   },
   {
-    label: 'Edit Image',
+    label: 'Edit',
     icon: Edit2,
     href: '/dashboard/edit-image',
   },
   {
-    label: 'Video Generation',
+    label: 'Video',
     icon: Video,
     href: '/dashboard/video',
+  },
+  {
+    label: 'Audio',
+    icon: Mic,
+    href: '/dashboard/audio',
+  },
+  {
+    label: 'Voice',
+    icon: Volume,
+    href: '/dashboard/voice',
+  },
+  {
+    label: 'Lipsync',
+    icon: Minus,
+    href: '/dashboard/lipsync',
+  },
+  { 
+    label: 'Upscale',
+    icon: Maximize2, 
+    href: '/dashboard/upscale', 
+  },
+  { 
+    label: 'Organize',
+    icon: Folder, 
+    href: '/dashboard/organize', 
   },
 ];
 

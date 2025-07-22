@@ -31,3 +31,32 @@ export const generateVideo = async (data: GenerateVideoRequest): Promise<Generat
     throw error;
   }
 };
+
+interface VeoVideoResponse {
+  success: boolean;
+  message: string;
+  data: {
+    videos: string[];
+  };
+}
+
+export const generateVeoVideo = async (data: GenerateVideoRequest): Promise<GenerateVideoResponse> => {
+  try {
+    const response = await axiosInstance.post<VeoVideoResponse>('/generate-veo-video', data);
+    const veoData = response.data;
+
+    return {
+      success: veoData.success,
+      videoData: {
+        url: veoData.data.videos[0],
+        prompt: data.prompt,
+        model: data.model,
+        duration: data.duration,
+        generatedAt: new Date().toISOString()
+      }
+    };
+  } catch (error) {
+    console.error('Error generating Veo video:', error);
+    throw error;
+  }
+};
