@@ -172,12 +172,12 @@ export default function ChatPage() {
                     className="w-full h-32 p-4 border rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-black/5"
                   />
                   <div className="absolute bottom-4 left-4 flex items-center gap-2">
-                    <Button variant="outline" size="sm" className="border-black/10 rounded-full">
+                    <Button variant="outline" size="sm" className="border-black/10 rounded-full hover:bg-white/10 hover:border-black/20 hover:text-black">
                       <Plus className="w-4 h-4" />
                     </Button>
                   </div>
                   <div className="absolute bottom-4 right-4 flex items-center gap-2">
-                    <Button variant="outline" size="sm" className="border-black/10 rounded-full">
+                    <Button variant="outline" size="sm" className="border-black/10 rounded-full hover:bg-white/10 hover:border-black/20 hover:text-black">
                       <Mic className="h-4 w-4" />
                     </Button>
                     <Button 
@@ -212,7 +212,7 @@ export default function ChatPage() {
                         <Button variant="ghost" size="icon" className="h-8 w-8">
                           <Edit className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 bg-black text-white">
+                        <Button variant="ghost" size="icon" className="h-8 w-8 bg-black text-white hover:bg-black/80">
                           <Copy className="h-4 w-4" />
                         </Button>
                       </div>
@@ -246,7 +246,7 @@ export default function ChatPage() {
               <div className="flex justify-between items-center pt-4">
                 <Button 
                   variant="outline" 
-                  className="border-black/10"
+                  className="border-black/10 hover:bg-white/10 hover:border-black/40 hover:text-black"
                   onClick={handleGoBack}
                 >
                   Go Back

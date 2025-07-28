@@ -1,61 +1,71 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from '@/components/ui/collapsible';
-import { Book, Check, Download, Edit, MenuIcon, RefreshCcw, Save, Wand2 } from 'lucide-react';
-import { useState } from 'react';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Book, ChevronDown, ChevronUp, Clock, Info, Save, X } from 'lucide-react';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-interface Scene {
+interface SceneItem {
   id: number;
   title: string;
-  description: string;
-  mood: string;
-  timeOfDay: string;
-  setting: string;
+  duration: string;
+  size: string;
+  status: 'done' | 'pending';
+}
+
+interface RenderQueueItem {
+  id: number;
+  title: string;
+  resolution: string;
+  model: string;
+  eta: string;
+  credits: number;
+  status: 'processing' | 'queued';
+  progress?: number;
 }
 
 export default function ChatPage() {
-  const [selectedScene, setSelectedScene] = useState<Scene | null>(null);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [scenes] = useState<Scene[]>([
-    {
-      id: 1,
-      title: 'Lorem ipsum dolor sit',
-      description: 'Lorem ipsum dolor sit amet consectetur. Tortor metus mollis eget enim. Eleifend sapien ut pretium elementum dignissim in. Vitae facilisis sed erat mauris elit pellentesque ac pharetra cursus. Nisl eget imperdiet nunc sodales eget id vitae consectetur leo. Lorem ipsum pellentesque vestibulum donec varius purus eu. Egestas proin sem facilisis sagittis amet dolor sem turpis laoreet. Turpis elit fermentum ullamcorper sem. Mus at turpis nibh nibh.',
-      mood: 'Sunny with mild windy breath',
-      timeOfDay: 'Sunny with mild windy breath',
-      setting: 'Sunny with mild windy breath'
+  const scenes: SceneItem[] = [
+    { id: 1, title: 'Alley Chase', duration: '02:45', size: '455 MB', status: 'done' },
+    { id: 2, title: 'Rooftop Meeting', duration: '01:32', size: '287 MB', status: 'pending' },
+    { id: 3, title: 'Underground Lair', duration: '03:18', size: '612 MB', status: 'done' },
+    { id: 4, title: 'Final Confrontation', duration: '04:05', size: '823 MB', status: 'pending' },
+    { id: 5, title: 'Resolution', duration: '01:42', size: '344 MB', status: 'done' },
+  ];
+
+  const renderQueue: RenderQueueItem[] = [
+    { 
+      id: 1, 
+      title: 'Rooftop Meeting', 
+      resolution: '1080p + 4K', 
+      model: 'Topaz Standard',
+      eta: '09:34',
+      credits: 125,
+      status: 'processing',
+      progress: 67
     },
-    {
-      id: 2,
-      title: 'Lorem ipsum dolor sit',
-      description: 'Lorem ipsum dolor sit amet consectetur. Tortor metus mollis eget enim. Eleifend sapien ut pretium elementum dignissim in. Vitae facilisis sed erat mauris elit pellentesque ac pharetra cursus. Nisl eget imperdiet nunc sodales eget id vitae consectetur leo. Lorem ipsum pellentesque vestibulum donec varius purus eu. Egestas proin sem facilisis sagittis amet dolor sem turpis laoreet. Turpis elit fermentum ullamcorper sem. Mus at turpis nibh nibh.',
-      mood: 'Sunny with mild windy breath',
-      timeOfDay: 'Sunny with mild windy breath',
-      setting: 'Sunny with mild windy breath'
+    { 
+      id: 2, 
+      title: 'Final Confrontation', 
+      resolution: '1080p + 4K', 
+      model: 'Topaz Crisp',
+      eta: '12:40',
+      credits: 180,
+      status: 'queued'
     },
-    {
-      id: 3,
-      title: 'Lorem ipsum dolor sit',
-      description: 'Lorem ipsum dolor sit amet consectetur. Tortor metus mollis eget enim. Eleifend sapien ut pretium elementum dignissim in.',
-      mood: 'Sunny with mild windy breath',
-      timeOfDay: 'Sunny with mild windy breath',
-      setting: 'Sunny with mild windy breath'
+    { 
+      id: 3, 
+      title: 'Complete Project', 
+      resolution: '1080p + 4K', 
+      model: 'Topaz Clean',
+      eta: '45:20',
+      credits: 690,
+      status: 'queued'
     }
-  ]);
-  const [selectedModel, setSelectedModel] = useState('veo-3')
-
-  const models = [
-    { value: "veo-3", label: "VEO 3", description: "Advanced AI image generation" },
-    { value: "veo-2", label: "VEO 2", description: "Google's latest image model" },
-    { value: "kling", label: "Kling", description: "High-quality image generation" },
-  ]
-
+  ];
+  
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
@@ -70,35 +80,16 @@ export default function ChatPage() {
             <div className="ml-2">
               <h1 className="text-lg font-medium">Neon Echo</h1>
               <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-500">Step 3 of 4</span>
+                <span className="text-sm text-gray-500">Step 4 of 4</span>
                 <div className="h-1.5 w-24 bg-gray-100 rounded-full">
-                  <div className="h-full w-3/4 bg-black rounded-full" />
+                  <div className="h-full w-full bg-black rounded-full" />
                 </div>
               </div>
             </div>
           </div>
           <div className="flex justify-between items-center px-6 py-2">
-            <h2 className="text-lg font-medium">Scene Video Creator</h2>
+            <h2 className="text-lg font-medium">Merge & Combine Controls</h2>
             <div className="flex items-center gap-2">
-                <Select value={selectedModel} onValueChange={setSelectedModel}>
-                    <SelectTrigger className="w-full sm:w-48 h-8 sm:h-9 bg-white/80 backdrop-blur-sm border border-gray-200/50  text-xs sm:text-sm font-medium hover:bg-white/90 focus:bg-white/90">
-                      <SelectValue placeholder="Select model" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-white/95 backdrop-blur-sm border border-gray-200/50 shadow-xl">
-                      {models.map((model) => (
-                        <SelectItem
-                          key={model.value}
-                          value={model.value}
-                          className="cursor-pointer hover:bg-gray-50/80 focus:bg-gray-50/80  mx-1 my-0.5"
-                        >
-                          <div className="flex flex-col">
-                            <span className="font-medium text-sm">{model.label}</span>
-                            {/* <span className="text-xs text-gray-500">{model.description}</span> */}
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
               <Button className="bg-[#0B0F1C] text-white hover:bg-[#0B0F1C]/90">
                 <Save className="w-4 h-4 mr-2" />
                 Save Draft
@@ -111,176 +102,248 @@ export default function ChatPage() {
       {/* Main Content */}
       <div className="grid grid-cols-2 divide-x h-[calc(100vh-116px)]">
         {/* Left Column */}
-        <div className="flex flex-col h-full gap-4 p-4">
-            {scenes.map((scene) => (
-                <Collapsible key={scene.id} className="border rounded-lg">
-                  <CollapsibleTrigger className="w-full cursor-pointer">
-                    <div className="flex items-center justify-between bg-gray-100 p-4">
-                      <div className="flex items-center gap-2">
-                        <MenuIcon className="w-4 h-4 mr-2 text-gray-500" />
-                        <h3 className="font-medium">Scene {scene.id}</h3>
-                        <p className="text-sm text-gray-500">{scene.title}</p>
+        <div className="flex flex-col h-full gap-6 p-4 overflow-y-auto">
+          {scenes.map((scene) => (
+            <div key={scene.id} className="flex items-center gap-4 p-4 border rounded-lg">
+              <div className="relative w-16 h-12 bg-gray-200 rounded flex items-center justify-center">
+                <span className="text-xs text-gray-500">{scene.duration}</span>
+              </div>
+              <div className="flex-1">
+                <h3 className="font-medium">{scene.title}</h3>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-500">{scene.duration}</span>
+                  <span className="text-xs text-gray-500">{scene.size}</span>
+                </div>
+              </div>
+              <div className="flex items-center">
+                {scene.status === 'done' ? (
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    Done
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                    Pending
+                  </span>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Right Column */}
+        <div className="p-4 space-y-8 overflow-y-auto">
+          {/* Scene Sequence */}
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-medium">Scene Sequence</h2>
+              <Select defaultValue="fade">
+                <SelectTrigger className="w-24">
+                  <SelectValue placeholder="Transition" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="fade">Fade</SelectItem>
+                  <SelectItem value="cut">Cut</SelectItem>
+                  <SelectItem value="dissolve">Dissolve</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="space-y-2">
+              {scenes.map((scene) => (
+                <div key={scene.id} className="flex items-center gap-2 p-2 bg-gray-100 rounded-md">
+                  <div className="flex items-center justify-center w-6 h-6">
+                    <span className="text-xs">{scene.id}</span>
+                  </div>
+                  <div className="w-6 h-6 flex items-center justify-center">
+                    <div className="w-4 h-4 bg-gray-300 rounded"></div>
+                  </div>
+                  <div className="flex-1">
+                    <div className="text-sm">{scene.title}</div>
+                    <div className="text-xs text-gray-500">{scene.duration}</div>
+                  </div>
+                  <div className="w-8 text-right">
+                    <span className="text-xs text-gray-500">fade</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <div className="flex items-center justify-between mt-4 text-sm">
+              <div>Total Duration: <span className="font-medium">13:32</span></div>
+              <div>Estimated Size: <span className="font-medium">2.8 GB</span></div>
+            </div>
+          </div>
+          
+          {/* Resolution Settings */}
+          <div>
+            <h2 className="text-lg font-medium mb-4">Resolution Settings</h2>
+            
+            <div className="grid grid-cols-2 gap-6">
+              <div>
+                <h3 className="text-sm font-medium mb-2">Target Resolution</h3>
+                <Select defaultValue="4k">
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select resolution" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="4k">4K (3840x2160)</SelectItem>
+                    <SelectItem value="1080p">1080p (1920x1080)</SelectItem>
+                    <SelectItem value="720p">720p (1280x720)</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <h3 className="text-sm font-medium mb-2">Output Style</h3>
+                <RadioGroup defaultValue="preserve" className="space-y-1">
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="preserve" id="preserve" />
+                    <Label htmlFor="preserve">Preserve Grain</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="smooth" id="smooth" />
+                    <Label htmlFor="smooth">Smooth Output</Label>
+                  </div>
+                </RadioGroup>
+              </div>
+            </div>
+            
+            <div className="mt-4 flex items-center justify-between">
+              <div className="text-sm font-medium">Lock Aspect Ratio</div>
+              <Switch defaultChecked />
+            </div>
+          </div>
+          
+          {/* AI Upscaling Model */}
+          <div>
+            <h2 className="text-lg font-medium mb-4">AI Upscaling Model</h2>
+            
+            <div className="grid grid-cols-3 gap-2">
+              <div className="border rounded-md p-4 relative">
+                <div className="absolute top-2 right-2">
+                  <Info className="w-4 h-4 text-gray-400" />
+                </div>
+                <h3 className="font-medium mb-1">Topaz Standard</h3>
+                <p className="text-xs text-gray-500">Balanced quality and speed</p>
+              </div>
+              
+              <div className="border rounded-md p-4 relative">
+                <div className="absolute top-2 right-2">
+                  <Info className="w-4 h-4 text-gray-400" />
+                </div>
+                <h3 className="font-medium mb-1">Topaz Crisp</h3>
+                <p className="text-xs text-gray-500">Sharp details, best for graphics</p>
+              </div>
+              
+              <div className="border rounded-md p-4 relative">
+                <div className="absolute top-2 right-2">
+                  <Info className="w-4 h-4 text-gray-400" />
+                </div>
+                <h3 className="font-medium mb-1">Topaz Clean</h3>
+                <p className="text-xs text-gray-500">Noise reduction, best for film</p>
+              </div>
+            </div>
+          </div>
+          
+          {/* Render Queue */}
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-medium">Render Queue</h2>
+              <Button variant="ghost" size="sm" className="h-8 px-2 text-xs">
+                <span className="flex items-center gap-1">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4">
+                    <path d="M8 3.33333V12.6667M8 12.6667L12.6667 8M8 12.6667L3.33333 8" stroke="currentColor" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  Queue Settings
+                </span>
+              </Button>
+            </div>
+            
+            <div className="space-y-2">
+              {renderQueue.map((item) => (
+                <div key={item.id} className="border rounded-md overflow-hidden">
+                  <div className="flex items-center justify-between p-3 bg-white">
+                    <div className="flex items-center gap-2">
+                      <div className="w-6 h-6 bg-gray-100 flex items-center justify-center rounded">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-4 h-4">
+                          <path d="M12.6667 12.6667H3.33333C2.96667 12.6667 2.66667 12.3667 2.66667 12V4C2.66667 3.63333 2.96667 3.33333 3.33333 3.33333H12.6667C13.0333 3.33333 13.3333 3.63333 13.3333 4V12C13.3333 12.3667 13.0333 12.6667 12.6667 12.6667ZM3.33333 4V12H12.6667V4H3.33333Z" fill="black"/>
+                        </svg>
                       </div>
-                      <div className="flex gap-2">
-                        <Button 
-                          variant="outline" 
-                          className="ml-auto bg-white border-black/10"
-                          onClick={() => setSelectedScene(scene)}
-                        >
-                          Open
+                      <div>
+                        <div className="text-sm">{item.title}</div>
+                        <div className="text-xs text-gray-500">Resolution: {item.resolution}</div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-4">
+                      <div>
+                        <div className="text-xs text-right">Model:</div>
+                        <div className="text-xs font-medium">{item.model}</div>
+                      </div>
+                      
+                      <div>
+                        <div className="text-xs text-right">ETA:</div>
+                        <div className="flex items-center gap-1">
+                          <Clock className="w-3 h-3" />
+                          <span className="text-xs font-medium">{item.eta}</span>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <div className="text-xs text-right">Credits:</div>
+                        <div className="text-xs font-medium text-right">{item.credits}</div>
+                      </div>
+                      
+                      <div className="flex gap-1">
+                        <Button variant="ghost" size="icon" className="h-6 w-6">
+                          <ChevronUp className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" size="icon" className="h-6 w-6">
+                          <ChevronDown className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" size="icon" className="h-6 w-6">
+                          <X className="h-4 w-4" />
                         </Button>
                       </div>
                     </div>
-                  </CollapsibleTrigger>
-                  <CollapsibleContent>
-                    <div className="space-y-4 p-4">
-                      <div>
-                        <h4 className="text-sm font-medium mb-1">Scene Description</h4>
-                        <p className="text-sm text-gray-600">{scene.description}</p>
+                  </div>
+                  
+                  {item.status === 'processing' && (
+                    <div className="px-3 py-1 bg-gray-50">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs">Progress</span>
+                        <span className="text-xs font-medium">{item.progress}%</span>
                       </div>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div>
-                          <h4 className="text-sm font-medium mb-1">Mood</h4>
-                          <p className="text-sm text-gray-600">{scene.mood}</p>
-                        </div>
-                        <div>
-                          <h4 className="text-sm font-medium mb-1">Time of Day</h4>
-                          <p className="text-sm text-gray-600">{scene.timeOfDay}</p>
-                        </div>
-                      </div>
-                      <div>
-                        <h4 className="text-sm font-medium mb-1">Setting</h4>
-                        <p className="text-sm text-gray-600">{scene.setting}</p>
+                      <div className="h-1.5 w-full bg-gray-200 rounded-full">
+                        <div 
+                          className="h-full bg-black rounded-full" 
+                          style={{ width: `${item.progress}%` }}
+                        />
                       </div>
                     </div>
-                  </CollapsibleContent>
-                </Collapsible>
+                  )}
+                </div>
               ))}
-        </div>
-
-        {/* Right Column - Scene List */}
-        <div className="p-4 space-y-4 overflow-y-auto">
-          {selectedScene && (
-            <div className="space-y-6 border rounded-lg">
-              <div className="flex items-center justify-between p-4 bg-gray-100">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-base font-medium">Scene {selectedScene.id}</h3>
-                  <span className="text-sm text-gray-500">{selectedScene.title}</span>
-                </div>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <Edit className="h-4 w-4" />
-                </Button>
-              </div>
-
-              <div className="px-4">
-                <div>
-                  <h4 className="text-sm font-medium mb-2">Scene Description</h4>
-                  <p className="text-sm text-gray-600">{selectedScene.description}</p>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <h4 className="text-sm font-medium mb-2">Mood</h4>
-                    <p className="text-sm text-gray-600">{selectedScene.mood}</p>
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-medium mb-2">Time Of day</h4>
-                    <p className="text-sm text-gray-600">{selectedScene.timeOfDay}</p>
-                  </div>
-                </div>
-
-                <div>
-                  <h4 className="text-sm font-medium mb-2">Setting</h4>
-                  <p className="text-sm text-gray-600">{selectedScene.setting}</p>
-                </div>
-              </div>
-
-              <div className="flex flex-wrap gap-2 px-4">
-                <Button variant="outline" className="h-8 text-xs">
-                  <span className="flex items-center gap-2">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12 10.6667H4C3.63333 10.6667 3.33333 10.3667 3.33333 10V3.33333C3.33333 2.96667 3.63333 2.66667 4 2.66667H12C12.3667 2.66667 12.6667 2.96667 12.6667 3.33333V10C12.6667 10.3667 12.3667 10.6667 12 10.6667ZM4 3.33333V10H12V3.33333H4Z" fill="black"/>
-                      <path d="M13.3333 13.3333H2.66667C2.3 13.3333 2 13.0333 2 12.6667V5.33333H2.66667V12.6667H13.3333V13.3333Z" fill="black"/>
-                    </svg>
-                    Aspect Ratio
-                  </span>
-                </Button>
-                <Button variant="outline" className="h-8 text-xs">
-                  <span className="flex items-center gap-2">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12.6667 12.6667H3.33333C2.96667 12.6667 2.66667 12.3667 2.66667 12V4C2.66667 3.63333 2.96667 3.33333 3.33333 3.33333H12.6667C13.0333 3.33333 13.3333 3.63333 13.3333 4V12C13.3333 12.3667 13.0333 12.6667 12.6667 12.6667ZM3.33333 4V12H12.6667V4H3.33333Z" fill="black"/>
-                      <path d="M10.6667 10.6667H5.33333V10H10.6667V10.6667ZM9.33333 8.66667H5.33333V8H9.33333V8.66667ZM8 6.66667H5.33333V6H8V6.66667Z" fill="black"/>
-                    </svg>
-                    Style
-                  </span>
-                </Button>
-                <Button variant="outline" className="h-8 text-xs">
-                  <span className="flex items-center gap-2">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12.6667 12.6667H3.33333C2.96667 12.6667 2.66667 12.3667 2.66667 12V4C2.66667 3.63333 2.96667 3.33333 3.33333 3.33333H12.6667C13.0333 3.33333 13.3333 3.63333 13.3333 4V12C13.3333 12.3667 13.0333 12.6667 12.6667 12.6667ZM3.33333 4V12H12.6667V4H3.33333Z" fill="black"/>
-                      <path d="M10.6667 8.66667C9.93333 8.66667 9.33333 8.06667 9.33333 7.33333C9.33333 6.6 9.93333 6 10.6667 6C11.4 6 12 6.6 12 7.33333C12 8.06667 11.4 8.66667 10.6667 8.66667ZM4.66667 10.6667L6.66667 8L7.66667 9.33333L9.66667 6.66667L11.3333 8.66667V4H4.66667V10.6667Z" fill="black"/>
-                    </svg>
-                    Video Duration
-                  </span>
-                </Button>
-                <Button variant="outline" className="h-8 text-xs">
-                  <span className="flex items-center gap-2">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12.6667 12.6667H3.33333C2.96667 12.6667 2.66667 12.3667 2.66667 12V4C2.66667 3.63333 2.96667 3.33333 3.33333 3.33333H12.6667C13.0333 3.33333 13.3333 3.63333 13.3333 4V12C13.3333 12.3667 13.0333 12.6667 12.6667 12.6667ZM3.33333 4V12H12.6667V4H3.33333Z" fill="black"/>
-                      <path d="M10.6667 7.33333H8V4.66667H8.66667V6.66667H10.6667V7.33333ZM11.3333 11.3333H4.66667V10.6667H11.3333V11.3333ZM11.3333 9.33333H4.66667V8.66667H11.3333V9.33333Z" fill="black"/>
-                    </svg>
-                    Reference Image
-                  </span>
-                </Button>
-              </div>
-              <div className="px-4 pb-4">
-                <Button 
-                    className="w-full bg-[#0B0F1C] text-white hover:bg-[#0B0F1C]/90"
-                    onClick={() => setIsGenerating(true)}
-                >
-                    <Wand2 className="w-4 h-4 mr-2" />
-                    Generate Scene Video
-                </Button>
-              </div>
             </div>
-          )}
-          {isGenerating && (
-            <div className="space-y-4 border rounded-lg">
-              <div className="p-4 bg-gray-100">
-                <h2 className="text-lg font-medium">Generations</h2>
-              </div>
-              <div className="grid grid-cols-1 px-4">
-                <div className="relative group">
-                  <div className="absolute inset-0  rounded-lg pointer-events-none" />
-                  <video src="https://tsgxefnybjfdweujuafo.supabase.co/storage/v1/object/public/ehudaivideos//heaven.mp4" controls className="w-full rounded-lg" />
-                </div>
-              </div>
-              <div className="flex gap-2 px-4 pb-4">
-                <Button variant="outline" className="flex-1">
-                  <Check className='w-4 h-4 mr-2'/>
-                  Approve
-                </Button>
-                <Button variant="outline" className="flex-1">
-                  <RefreshCcw className='w-4 h-4 mr-2'/>
-                  Regenerate
-                </Button>
-                <Button variant="outline" className="flex-1">
-                  <Edit className='w-4 h-4 mr-2'/>
-                  Edit Prompt
-                </Button>
-                <Button variant="outline" className="flex-1">
-                  <Download className='w-4 h-4 mr-2'/>
-                  Download
-                </Button>
-              </div>
+          </div>
+          
+          {/* Save Settings */}
+          <div>
+            <h2 className="text-lg font-medium mb-4">Save Settings</h2>
+            
+            <div className="text-sm text-gray-500 mb-2">
+              Estimated render time: <span className="font-medium">1h 24m</span>
             </div>
-          )}
-          <div className='flex gap-2 mt-8 px-4 pb-4 justify-between'>
-            <Button variant="outline">
-                Back to Storyboard
-            </Button>
-            <Button>
-                Proceed to Compilation
+            
+            <div className="text-sm text-gray-500 mb-6">
+              Total cost: <span className="font-medium">1195 credits</span>
+            </div>
+            
+            <Button className="w-full bg-[#0B0F1C] text-white hover:bg-[#0B0F1C]/90">
+              <svg className="w-4 h-4 mr-2" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M13.3333 8.00001L8.00001 13.3333M8.00001 13.3333L2.66667 8.00001M8.00001 13.3333L8.00001 2.66667" stroke="white" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              Start Final Render
             </Button>
           </div>
         </div>

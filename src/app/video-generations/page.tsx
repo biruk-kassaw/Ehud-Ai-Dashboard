@@ -9,6 +9,7 @@ import {
 import { Book, Check, Download, Edit, MenuIcon, RefreshCcw, Save, Wand2 } from 'lucide-react';
 import { useState } from 'react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import Link from 'next/link';
 
 interface Scene {
   id: number;
@@ -124,7 +125,7 @@ export default function ChatPage() {
                       <div className="flex gap-2">
                         <Button 
                           variant="outline" 
-                          className="ml-auto bg-white border-black/10"
+                          className="ml-auto bg-white border-black/10 hover:bg-gray-100  hover:text-black"
                           onClick={() => setSelectedScene(scene)}
                         >
                           Open
@@ -196,7 +197,7 @@ export default function ChatPage() {
               </div>
 
               <div className="flex flex-wrap gap-2 px-4">
-                <Button variant="outline" className="h-8 text-xs">
+                <Button variant="outline" className="h-8 text-xs hover:bg-gray-100  hover:text-black">
                   <span className="flex items-center gap-2">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M12 10.6667H4C3.63333 10.6667 3.33333 10.3667 3.33333 10V3.33333C3.33333 2.96667 3.63333 2.66667 4 2.66667H12C12.3667 2.66667 12.6667 2.96667 12.6667 3.33333V10C12.6667 10.3667 12.3667 10.6667 12 10.6667ZM4 3.33333V10H12V3.33333H4Z" fill="black"/>
@@ -205,7 +206,7 @@ export default function ChatPage() {
                     Aspect Ratio
                   </span>
                 </Button>
-                <Button variant="outline" className="h-8 text-xs">
+                <Button variant="outline" className="h-8 text-xs hover:bg-gray-100  hover:text-black">
                   <span className="flex items-center gap-2">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M12.6667 12.6667H3.33333C2.96667 12.6667 2.66667 12.3667 2.66667 12V4C2.66667 3.63333 2.96667 3.33333 3.33333 3.33333H12.6667C13.0333 3.33333 13.3333 3.63333 13.3333 4V12C13.3333 12.3667 13.0333 12.6667 12.6667 12.6667ZM3.33333 4V12H12.6667V4H3.33333Z" fill="black"/>
@@ -214,7 +215,7 @@ export default function ChatPage() {
                     Style
                   </span>
                 </Button>
-                <Button variant="outline" className="h-8 text-xs">
+                <Button variant="outline" className="h-8 text-xs hover:bg-gray-100  hover:text-black">
                   <span className="flex items-center gap-2">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M12.6667 12.6667H3.33333C2.96667 12.6667 2.66667 12.3667 2.66667 12V4C2.66667 3.63333 2.96667 3.33333 3.33333 3.33333H12.6667C13.0333 3.33333 13.3333 3.63333 13.3333 4V12C13.3333 12.3667 13.0333 12.6667 12.6667 12.6667ZM3.33333 4V12H12.6667V4H3.33333Z" fill="black"/>
@@ -223,7 +224,7 @@ export default function ChatPage() {
                     Video Duration
                   </span>
                 </Button>
-                <Button variant="outline" className="h-8 text-xs">
+                <Button variant="outline" className="h-8 text-xs hover:bg-gray-100  hover:text-black">
                   <span className="flex items-center gap-2">
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M12.6667 12.6667H3.33333C2.96667 12.6667 2.66667 12.3667 2.66667 12V4C2.66667 3.63333 2.96667 3.33333 3.33333 3.33333H12.6667C13.0333 3.33333 13.3333 3.63333 13.3333 4V12C13.3333 12.3667 13.0333 12.6667 12.6667 12.6667ZM3.33333 4V12H12.6667V4H3.33333Z" fill="black"/>
@@ -256,19 +257,19 @@ export default function ChatPage() {
                 </div>
               </div>
               <div className="flex gap-2 px-4 pb-4">
-                <Button variant="outline" className="flex-1">
+                <Button variant="outline" className="flex-1 hover:bg-gray-100  hover:text-black">
                   <Check className='w-4 h-4 mr-2'/>
                   Approve
                 </Button>
-                <Button variant="outline" className="flex-1">
+                <Button variant="outline" className="flex-1 hover:bg-gray-100  hover:text-black">
                   <RefreshCcw className='w-4 h-4 mr-2'/>
                   Regenerate
                 </Button>
-                <Button variant="outline" className="flex-1">
+                <Button variant="outline" className="flex-1 hover:bg-gray-100  hover:text-black">
                   <Edit className='w-4 h-4 mr-2'/>
                   Edit Prompt
                 </Button>
-                <Button variant="outline" className="flex-1">
+                <Button variant="outline" className="flex-1 hover:bg-gray-100  hover:text-black">
                   <Download className='w-4 h-4 mr-2'/>
                   Download
                 </Button>
@@ -276,12 +277,14 @@ export default function ChatPage() {
             </div>
           )}
           <div className='flex gap-2 mt-8 px-4 pb-4 justify-between'>
-            <Button variant="outline">
+            <Button variant="outline" className='hover:bg-gray-100  hover:text-black'>
                 Back to Storyboard
             </Button>
-            <Button>
-                Proceed to Compilation
-            </Button>
+            <Link href="/video-compilation">
+                <Button>
+                    Proceed to Compilation
+                </Button>
+            </Link>
           </div>
         </div>
       </div>

@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Pencil, ArrowUpCircle, Dumbbell, Music, Mic2, Speech } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import Masonry from "react-masonry-css";
 
 const breakpointColumnsObj = {
@@ -49,9 +50,11 @@ export default function ChatPage() {
         <div className="relative z-10">
           <h2 className="text-4xl font-bold mb-2">Create your story</h2>
           <p className="text-md mb-6">Generate images from text prompts & styles</p>
-          <Button className="bg-transparent text-white border border-white hover:bg-white/10">
-            Create my project
-          </Button>
+          <Link href="/chat">
+            <Button className="bg-transparent text-white border border-white hover:bg-white/10">
+              Create my project
+            </Button>
+          </Link>
         </div>
       </section>
 
@@ -120,7 +123,7 @@ export default function ChatPage() {
                   <p className="text-sm">{feature.description}</p>
                 </div>
                 <div>
-                  <Button variant="outline" className="ml-auto bg-white border-black/10">
+                  <Button variant="outline" className="ml-auto bg-white border-black/10 hover:bg-white/10 hover:border-black/20 hover:text-black">
                     Open
                   </Button>
                 </div>
