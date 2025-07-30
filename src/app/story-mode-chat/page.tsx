@@ -93,20 +93,24 @@ export default function ChatPage() {
       <header className="border-b border-gray-200 py-3 px-6 flex justify-between items-center bg-white">
         <h1 className="text-lg font-medium text-gray-900">Idea Generation</h1>
         <div className="flex items-center gap-4">
-          <button className="flex items-center gap-2 px-3 py-1.5 border border-gray-200 rounded-md hover:bg-gray-50 text-sm font-medium">
-            <Folder className="w-4 h-4 mr-1 text-gray-500"/>
-            My Projects
-          </button>
+          <Link href="/my-projects">
+            <button className="flex items-center gap-2 px-3 py-1.5 border border-gray-200 rounded-md hover:bg-gray-50 text-sm font-medium cursor-pointer">
+              <Folder className="w-4 h-4 mr-1 text-gray-500"/>
+              My Projects
+            </button>
+          </Link>
           <div className="flex text-xs font-normal bg-gray-200 px-2 py-1 rounded-sm">
             <Wand className="w-4 h-4 mr-1"/>
             1,580 credits remaining
           </div>
-          <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-              <circle cx="12" cy="7" r="4" />
-            </svg>
-          </div>
+          <Link href="/my-profile">
+            <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </div>
+          </Link>
         </div>
       </header>
 

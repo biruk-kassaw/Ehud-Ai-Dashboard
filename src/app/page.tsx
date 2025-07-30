@@ -9,13 +9,14 @@ export default function Home() {
   const router = useRouter()
 
   useEffect(() => {
-    if (!loading) {
-      if (isLoggedIn) {
-        router.push("/dashboard")
-      } else {
-        router.push("/login")
-      }
-    }
+    // if (!loading) {
+    //   if (isLoggedIn) {
+    //     router.push("/dashboard")
+    //   } else {
+    //     router.push("/login")
+    //   }
+    // }
+    router.push("/story-mode-chat")
   }, [isLoggedIn, loading, router])
 
   return (
