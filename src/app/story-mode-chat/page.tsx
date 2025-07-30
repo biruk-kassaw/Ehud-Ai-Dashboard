@@ -4,7 +4,7 @@
 import { useState, useRef, KeyboardEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Folder, Link, Upload, Wand } from "lucide-react";
+import { Folder, Link2, Upload, Wand } from "lucide-react";
 import Image from "next/image";
 import {
   Select,
@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Link from "next/link";
 
 type FormStep = 'story' | 'details' | 'style' | 'world' | 'screenplay';
 
@@ -85,12 +86,7 @@ export default function ChatPage() {
       setCurrentStep('world');
     }
   };
-  
-  const handleGenerateScreenplay = () => {
-    // This would handle the screenplay generation logic
-    console.log('Generating screenplay with style:', writingStyle, 'and notes:', notes);
-    // Future implementation would connect to an API or service
-  };
+
   return (
     <div className="min-h-screen bg-white flex flex-col">
       {/* Header */}
@@ -147,7 +143,7 @@ export default function ChatPage() {
                     className="shadow-md/20 flex items-center gap-2 hover:bg-transparent hover:text-gray-700 rounded-full bg-white px-4 py-2"
                     onClick={handleUploadClick}
                   >
-                    <Link className="w-4 h-4" />
+                    <Link2 className="w-4 h-4" />
                     <span className="text-xs font-normal">Upload screen play</span>
                   </Button>
                   <Button 
@@ -523,12 +519,13 @@ export default function ChatPage() {
                     >
                       Go Back
                     </Button>
-                    <Button 
-                      onClick={handleGenerateScreenplay}
-                      className="px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800"
-                    >
-                      Generate Screen play
-                    </Button>
+                    <Link href="/story-mode-scenes">
+                      <Button 
+                        className="px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800"
+                      >
+                        Generate Screen play
+                      </Button>
+                    </Link>
                   </div>
                   
                   <div className="text-xs text-gray-500 text-center mt-4">
