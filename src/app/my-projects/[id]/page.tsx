@@ -5,10 +5,10 @@ import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Plus, Pencil, Eye } from 'lucide-react';
 
-export default function ProjectDetailPage({ params }: { params: { id: string } }) {
+export default function ProjectDetailPage() {
   // Mock project data
   const project = {
-    id: params.id,
+    id: '1',
     title: 'Escape Series',
     lastEdited: 'July 18, 2025',
     description: 'A suspenseful escape scene from the underground facility. Includes chase, tension buildup, and resolution.',
