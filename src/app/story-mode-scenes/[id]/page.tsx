@@ -1,12 +1,18 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Edit, Folder, Play, Trash, Wand, ZoomIn, ZoomOut } from 'lucide-react';
+import { Button } from "@/components/ui/button"
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Edit, Folder, Fullscreen, Play, Trash, Wand, ZoomIn, ZoomOut } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useState } from 'react';
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function SceneDetailPage() {
   // Mock data for the scene
+  const [shotNumber, setShotNumber] = useState("1");
+  const [sceneCompleted, setSceneCompleted] = useState(false);
   const scene = {
     id: '1',
     title: 'The Escape Begins',
@@ -182,9 +188,71 @@ export default function SceneDetailPage() {
               </tbody>
             </table>
             <div className="mt-4 flex justify-end pr-6">
-              <Button variant="outline" className="px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800">
-                Generate more shot lists
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline" className="px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800">
+                    Generate more shot lists
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto p-6">
+                  <div className="flex flex-col">
+                    <h2 className="text-xl font-semibold mb-6">Shot 1</h2>
+                    
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Characters anchored</label>
+                        <div className="relative">
+                          <select className="w-full border border-gray-300 rounded-md py-2 px-3 appearance-none focus:outline-none focus:ring-2 focus:ring-gray-200">
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                          </select>
+                          <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                            <svg className="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                              <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+                            </svg>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Description</label>
+                        <textarea 
+                          className="w-full border border-gray-300 rounded-md py-2 px-3 min-h-[100px] focus:outline-none focus:ring-2 focus:ring-gray-200"
+                          defaultValue="Lorem ipsum dolor sit amet consectetur. Cursus ornare mi consectetur neque at tortor erat fermentum."
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Duration</label>
+                        <input 
+                          type="text" 
+                          className="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-gray-200"
+                          defaultValue="Pedro Duarte"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium mb-2">Notes</label>
+                        <textarea 
+                          className="w-full border border-gray-300 rounded-md py-2 px-3 min-h-[100px] focus:outline-none focus:ring-2 focus:ring-gray-200"
+                          defaultValue="Golden Hour lighting"
+                        />
+                      </div>
+                      
+                      <div className="border border-dashed border-gray-300 rounded-md p-8 flex flex-col items-center justify-center">
+                        <div className="mb-4">
+                          <Fullscreen className="w-10 h-10" />
+                        </div>
+                        <p className="text-sm text-gray-500 mb-4">No Generated video</p>
+                        <Button variant="outline" className="bg-black text-white hover:bg-gray-800 rounded-md px-4 py-2">
+                          Generate Image
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
 
@@ -227,15 +295,125 @@ export default function SceneDetailPage() {
                   </div>
                 </div>
                 <div className="flex gap-4">
-                  <Button className="px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800">
-                    Generate Video
-                  </Button>
-                  <Button variant="outline" className='px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-50 hover:text-gray-900'>
-                    Generate Image
-                  </Button>
-                  <Button variant="outline" className='px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 hover:text-gray-900 mr-2'>
-                    Anchor Characters
-                  </Button>
+                  <Link href="/generate-scene-video">
+                    <Button className="px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800">
+                      Generate Video
+                    </Button>
+                  </Link>
+                  <Link href="/generate-scene-image">
+                    <Button variant="outline" className='px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-50 hover:text-gray-900'>
+                      Generate Image
+                    </Button>
+                  </Link>
+                  <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" className='px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 hover:text-gray-900 mr-2'>
+                      Anchor Characters
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+                    <div className="py-2">
+                      <h2 className="text-lg font-semibold mb-4">Anchor Characters to Shot</h2>
+                      
+                      <div className="mb-4">
+                        <p className="font-medium mb-2">Shot Number</p>
+                        <Select value={shotNumber} onValueChange={setShotNumber}>
+                          <SelectTrigger className="w-[200px]">
+                            <SelectValue placeholder="Select..." />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="1">Shot 1</SelectItem>
+                            <SelectItem value="2">Shot 2</SelectItem>
+                            <SelectItem value="3">Shot 3</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-x-3 gap-y-4 mt-6">
+                        {/* Row 1 */}
+                        <div className="flex items-start space-x-3">
+                          <div className="w-20 h-20 shrink-0">
+                            <img src="/images/bear.png" alt="Character" className="w-full h-full object-cover rounded" />
+                          </div>
+                          <div>
+                            <p className="text-xs font-medium">Character name</p>
+                            <p className="text-sm">Marcus Elwood</p>
+                            <p className="text-xs font-medium mt-1">Role</p>
+                            <p className="text-sm">Protagonist</p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-start space-x-3">
+                          <div className="w-20 h-20 shrink-0">
+                            <img src="/images/bear.png" alt="Character" className="w-full h-full object-cover rounded" />
+                          </div>
+                          <div>
+                            <p className="text-xs font-medium">Character name</p>
+                            <p className="text-sm">Liam Carter</p>
+                            <p className="text-xs font-medium mt-1">Role</p>
+                            <p className="text-sm">Protagonist</p>
+                          </div>
+                        </div>
+                        
+                        {/* Row 2 */}
+                        <div className="flex items-start space-x-3">
+                          <div className="w-20 h-20 shrink-0">
+                            <img src="/images/bear.png" alt="Character" className="w-full h-full object-cover rounded" />
+                          </div>
+                          <div>
+                            <p className="text-xs font-medium">Character name</p>
+                            <p className="text-sm">Ethan Hawke</p>
+                            <p className="text-xs font-medium mt-1">Role</p>
+                            <p className="text-sm">Protagonist</p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-start space-x-3">
+                          <div className="w-20 h-20 shrink-0">
+                            <img src="/images/bear.png" alt="Character" className="w-full h-full object-cover rounded" />
+                          </div>
+                          <div>
+                            <p className="text-xs font-medium">Character name</p>
+                            <p className="text-sm">Oliver Grant</p>
+                            <p className="text-xs font-medium mt-1">Role</p>
+                            <p className="text-sm">Protagonist</p>
+                          </div>
+                        </div>
+                        
+                        {/* Row 3 */}
+                        <div className="flex items-start space-x-3">
+                          <div className="w-20 h-20 shrink-0">
+                            <img src="/images/bear.png" alt="Character" className="w-full h-full object-cover rounded" />
+                          </div>
+                          <div>
+                            <p className="text-xs font-medium">Character name</p>
+                            <p className="text-sm">Dr. Clara Bennett</p>
+                            <p className="text-xs font-medium mt-1">Role</p>
+                            <p className="text-sm">Antagonist</p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-start space-x-3">
+                          <div className="w-20 h-20 shrink-0">
+                            <img src="/images/bear.png" alt="Character" className="w-full h-full object-cover rounded" />
+                          </div>
+                          <div>
+                            <p className="text-xs font-medium">Character name</p>
+                            <p className="text-sm">Sofia Martinez</p>
+                            <p className="text-xs font-medium mt-1">Role</p>
+                            <p className="text-sm">Love Interest</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-6">
+                        <Button className="w-full px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800">
+                          Anchor Characters
+                        </Button>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
                 </div>
               </div>
                 <div className="overflow-hidden">
@@ -274,9 +452,61 @@ export default function SceneDetailPage() {
               <Button variant="ghost" size="icon" className="h-8 w-8">
                 <Play className="h-4 w-4" />
               </Button>
-              <Button className="px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800">
-                Combine All Shots
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button className="px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800">
+                    Combine All Shots
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto p-0">
+                  <div className="flex flex-col p-4">
+                    <div className="bg-black text-white p-4 rounded-lg">
+                      <h2 className="text-lg font-medium">Complied Story</h2>
+                    </div>
+                    
+                    <div className="p-4">
+                      <div className="mb-4">
+                        <h3 className="text-sm font-medium">Scene 1</h3>
+                        <p className="text-sm text-gray-600">A fierce battle unfolds between a man and a bear, showcasing raw strength and survival instincts.</p>
+                      </div>
+                      
+                      <div className="relative rounded-md overflow-hidden mb-4">
+                        <video 
+                          src="https://tsgxefnybjfdweujuafo.supabase.co/storage/v1/object/public/ehudaivideos//heaven.mp4" 
+                          className="w-full h-60 object-cover" 
+                        />
+                        <div className="absolute bottom-4 left-4 flex gap-2">
+                          <button className="bg-black/70 text-white p-2 rounded-md flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                            </svg>
+                          </button>
+                          <button className="bg-black/70 text-white p-2 rounded-md flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                              <polyline points="7 10 12 15 17 10"></polyline>
+                              <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-2 mb-4">
+                        <Checkbox 
+                          id="scene-completed" 
+                          checked={sceneCompleted}
+                          onCheckedChange={(checked) => setSceneCompleted(checked as boolean)}
+                        />
+                        <label htmlFor="scene-completed" className="text-sm font-medium cursor-pointer">Mark Scene as completed</label>
+                      </div>
+                      
+                      <Button className="w-full px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800">
+                        Save & Proceed to Next Scene
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
           <div className="flex items-center border border-gray-200 rounded-lg overflow-hidden">
