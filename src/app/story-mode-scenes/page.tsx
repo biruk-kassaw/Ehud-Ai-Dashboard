@@ -293,11 +293,11 @@ export default function ChatPage() {
       <Button variant="outline" className="border-black/10 hover:bg-white/10 hover:border-black/40 hover:text-black" onClick={handleGoBack}>
         Go Back
       </Button>
-      <Link href="/image-generations">
+      {/* <Link href="/image-generations">
         <Button className="bg-[#0B0F1C] text-white hover:bg-[#0B0F1C]/90">
           Proceed to image generations
         </Button>
-      </Link>
+      </Link> */}
     </div>
   </div>
 </div>
