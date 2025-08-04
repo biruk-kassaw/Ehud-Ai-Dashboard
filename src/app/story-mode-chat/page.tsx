@@ -93,7 +93,7 @@ export default function ChatPage() {
       <header className="border-b border-gray-200 py-3 px-6 flex justify-between items-center bg-white">
         <h1 className="text-lg font-medium text-gray-900">Idea Generation</h1>
         <div className="flex items-center gap-4">
-          <Link href="/my-projects">
+          <Link href="/my-projects" className="hidden md:block">
             <button className="flex items-center gap-2 px-3 py-1.5 border border-gray-200 rounded-md hover:bg-gray-50 text-sm font-medium cursor-pointer">
               <Folder className="w-4 h-4 mr-1 text-gray-500"/>
               My Projects
@@ -118,7 +118,9 @@ export default function ChatPage() {
       <main className="flex-1 flex flex-col items-center justify-center px-4 py-20 bg-white">
         {currentStep === 'story' && (
           <div className="max-w-4xl w-full">
-            <h2 className="text-5xl font-bold text-center mb-3 text-gray-900">Create Your Story</h2>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-center mb-3 text-gray-900">
+              Create Your Story
+            </h2>
             <p className="text-center text-gray-500 mb-8 text-xs">
               Type your idea below. If you&apos;re not sure how, that&apos;s okay! Just write a few sentences that best describes your story idea.
             </p>
@@ -165,382 +167,410 @@ export default function ChatPage() {
         )}
         
         {currentStep === 'details' && (
-          <div className="max-w-4xl w-full relative">
-            
-            {/* Background image positioned at window's bottom left */}
-            <div className="fixed bottom-0 left-0 z-0 opacity-80">
-              <Image 
-                src="/images/form1.png" 
-                alt="Book with feather" 
-                width={400}
-                height={400}
-                className="object-contain"
-              />
-            </div>
-            
-            {/* Story details form - centered */}
-            <div className="flex justify-center relative z-10">
-              <div className="w-1/2 bg-white bg-opacity-90 p-6 rounded-lg">
-                {/* Progress indicator */}
-                <div className="mb-12">
+          <div className="max-w-4xl w-full relative mx-auto">
+          {/* Background image positioned at window's bottom left */}
+          <div className="fixed bottom-0 left-0 z-0 opacity-80 hidden md:block">
+            <Image 
+              src="/images/form1.png" 
+              alt="Book with feather" 
+              width={400}
+              height={400}
+              className="object-contain"
+            />
+          </div>
+        
+          {/* Story details form - centered */}
+          <div className="flex justify-center relative z-10">
+            <div className="w-full sm:w-3/4 md:w-2/3 lg:w-1/2 bg-white bg-opacity-90 p-4 sm:p-6 rounded-lg">
+              
+              {/* Progress indicator */}
+              <div className="mb-8 sm:mb-12">
                 <div className="flex items-center justify-center text-xs text-gray-500 mb-2">
-                    <span>Step 2 of 10</span>
+                  <span>Step 2 of 10</span>
                 </div>
                 <div className="w-full bg-gray-200 h-1 rounded-full">
-                    <div className="bg-black h-1 rounded-full" style={{ width: '20%' }}></div>
+                  <div className="bg-black h-1 rounded-full" style={{ width: '20%' }}></div>
                 </div>
+              </div>
+        
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 text-gray-900">
+                Story details
+              </h2>
+              <p className="text-sm text-gray-500 mb-6 sm:mb-8">
+                Let&apos;s add some more detail by choosing from the options below.
+              </p>
+        
+              <div className="space-y-6">
+                {/* Genre */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">Genre</label>
+                  <Select value={genre} onValueChange={setGenre}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="fantasy">Fantasy</SelectItem>
+                      <SelectItem value="sci-fi">Science Fiction</SelectItem>
+                      <SelectItem value="mystery">Mystery</SelectItem>
+                      <SelectItem value="romance">Romance</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-                <h2 className="text-4xl font-bold mb-2 text-gray-900">Story details</h2>
-                <p className="text-sm text-gray-500 mb-8">
-                  Let&apos;s add some more detail by choosing from the options below.
-                </p>
-                
-                <div className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Genre</label>
-                    <Select value={genre} onValueChange={setGenre}>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="fantasy">Fantasy</SelectItem>
-                        <SelectItem value="sci-fi">Science Fiction</SelectItem>
-                        <SelectItem value="mystery">Mystery</SelectItem>
-                        <SelectItem value="romance">Romance</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Theme</label>
-                    <Select value={theme} onValueChange={setTheme}>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="coming-of-age">Coming of Age</SelectItem>
-                        <SelectItem value="redemption">Redemption</SelectItem>
-                        <SelectItem value="love">Love</SelectItem>
-                        <SelectItem value="survival">Survival</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Audience</label>
-                    <Select value={audience} onValueChange={setAudience}>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="children">Children</SelectItem>
-                        <SelectItem value="young-adult">Young Adult</SelectItem>
-                        <SelectItem value="adult">Adult</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Emotions</label>
-                    <Select value={emotions} onValueChange={setEmotions}>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="joy">Joy</SelectItem>
-                        <SelectItem value="sadness">Sadness</SelectItem>
-                        <SelectItem value="fear">Fear</SelectItem>
-                        <SelectItem value="surprise">Surprise</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div className="flex justify-between pt-4">
-                    <Button 
-                      variant="outline" 
-                      onClick={handleGoBack}
-                      className="px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-50 hover:text-gray-900"
-                    >
-                      Go Back
-                    </Button>
-                    <Button 
-                      onClick={handleContinue}
-                      className="px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800"
-                    >
-                      Continue
-                    </Button>
-                  </div>
+        
+                {/* Theme */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">Theme</label>
+                  <Select value={theme} onValueChange={setTheme}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="coming-of-age">Coming of Age</SelectItem>
+                      <SelectItem value="redemption">Redemption</SelectItem>
+                      <SelectItem value="love">Love</SelectItem>
+                      <SelectItem value="survival">Survival</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+        
+                {/* Audience */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">Audience</label>
+                  <Select value={audience} onValueChange={setAudience}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="children">Children</SelectItem>
+                      <SelectItem value="young-adult">Young Adult</SelectItem>
+                      <SelectItem value="adult">Adult</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+        
+                {/* Emotions */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">Emotions</label>
+                  <Select value={emotions} onValueChange={setEmotions}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="joy">Joy</SelectItem>
+                      <SelectItem value="sadness">Sadness</SelectItem>
+                      <SelectItem value="fear">Fear</SelectItem>
+                      <SelectItem value="surprise">Surprise</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+        
+                {/* Navigation buttons */}
+                <div className="flex flex-col sm:flex-row justify-between pt-4 gap-3">
+                  <Button 
+                    variant="outline" 
+                    onClick={handleGoBack}
+                    className="px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-50 hover:text-gray-900"
+                  >
+                    Go Back
+                  </Button>
+                  <Button 
+                    onClick={handleContinue}
+                    className="px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800"
+                  >
+                    Continue
+                  </Button>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+        
         )}
         
         {currentStep === 'style' && (
-          <div className="max-w-4xl w-full relative">
-            
-            {/* Background image positioned at window's bottom left */}
-            <div className="fixed bottom-0 left-0 z-0 opacity-80">
-                <Image 
-                  src="/images/form2.png" 
-                alt="Color palette" 
-                  width={400} 
-                  height={400} 
-                className="object-contain"
-                />
-              </div>
-            
-            {/* Story style form - centered */}
-            <div className="flex justify-center relative z-10">
-              <div className="w-1/2 bg-white bg-opacity-90 p-6 rounded-lg">
-                {/* Progress indicator */}
-                <div className="mb-12">
+          <div className="max-w-4xl w-full relative mx-auto">
+          {/* Background image positioned at window's bottom left */}
+          <div className="fixed bottom-0 left-0 z-0 opacity-80 hidden md:block">
+            <Image 
+              src="/images/form2.png" 
+              alt="Color palette" 
+              width={400} 
+              height={400} 
+              className="object-contain"
+            />
+          </div>
+        
+          {/* Story style form - centered */}
+          <div className="flex justify-center relative z-10">
+            <div className="w-full sm:w-3/4 md:w-2/3 lg:w-1/2 bg-white bg-opacity-90  sm:p-6 rounded-lg">
+              
+              {/* Progress indicator */}
+              <div className="mb-8 sm:mb-12">
                 <div className="flex items-center justify-center text-xs text-gray-500 mb-2">
-                    <span>Step 3 of 10</span>
+                  <span>Step 3 of 10</span>
                 </div>
                 <div className="w-full bg-gray-200 h-1 rounded-full">
-                    <div className="bg-black h-1 rounded-full" style={{ width: '30%' }}></div>
-                    </div>
-                  </div>
-                <h2 className="text-4xl font-bold mb-2 text-gray-900">Story Style and Format</h2>
-                <p className="text-sm text-gray-500 mb-8">
-                  Let&apos;s define the tone and format of your story.
-                </p>
-                  
-                  <div className="space-y-6">
-                    <div>
-                      <label className="block text-sm font-medium mb-2">Tone/Mood</label>
-                      <Select value={tone} onValueChange={setTone}>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="lighthearted">Lighthearted</SelectItem>
-                          <SelectItem value="serious">Serious</SelectItem>
-                          <SelectItem value="dark">Dark</SelectItem>
-                          <SelectItem value="humorous">Humorous</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium mb-2">Format</label>
-                      <Select value={format} onValueChange={setFormat}>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Select..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="novel">Novel</SelectItem>
-                          <SelectItem value="short-story">Short Story</SelectItem>
-                          <SelectItem value="screenplay">Screenplay</SelectItem>
-                          <SelectItem value="poem">Poem</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div className="flex justify-between pt-4">
-                      <Button 
-                        variant="outline" 
-                        onClick={handleGoBack}
-                      className="px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-50 hover:text-gray-900"
-                      >
-                        Go Back
-                      </Button>
-                      <Button
-                        onClick={handleContinue}
-                        className="px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800"
-                      >
-                      Continue
-                      </Button>
-                  </div>
+                  <div className="bg-black h-1 rounded-full" style={{ width: '30%' }}></div>
+                </div>
+              </div>
+        
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 text-gray-900">
+                Story Style and Format
+              </h2>
+              <p className="text-sm text-gray-500 mb-6 sm:mb-8">
+                Let&apos;s define the tone and format of your story.
+              </p>
+        
+              <div className="space-y-6">
+                {/* Tone/Mood */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">Tone/Mood</label>
+                  <Select value={tone} onValueChange={setTone}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="lighthearted">Lighthearted</SelectItem>
+                      <SelectItem value="serious">Serious</SelectItem>
+                      <SelectItem value="dark">Dark</SelectItem>
+                      <SelectItem value="humorous">Humorous</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+        
+                {/* Format */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">Format</label>
+                  <Select value={format} onValueChange={setFormat}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="novel">Novel</SelectItem>
+                      <SelectItem value="short-story">Short Story</SelectItem>
+                      <SelectItem value="screenplay">Screenplay</SelectItem>
+                      <SelectItem value="poem">Poem</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+        
+                {/* Navigation buttons */}
+                <div className="flex flex-col sm:flex-row justify-between pt-4 gap-3">
+                  <Button 
+                    variant="outline" 
+                    onClick={handleGoBack}
+                    className="px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-50 hover:text-gray-900"
+                  >
+                    Go Back
+                  </Button>
+                  <Button
+                    onClick={handleContinue}
+                    className="px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800"
+                  >
+                    Continue
+                  </Button>
                 </div>
               </div>
             </div>
           </div>
+        </div>
+        
         )}
         {/* World and Character step */}
         {currentStep === 'world' && (
-          <div className="max-w-4xl w-full relative">
-            
-            {/* Background image positioned at window's bottom left */}
-            <div className="fixed bottom-0 left-0 z-0 opacity-80">
-              <Image 
-                src="/images/form3.png" 
-                alt="World and Character illustration" 
-                width={400} 
-                height={400} 
-                className="object-contain"
-              />
-            </div>
-            
-            {/* World and Character form - centered */}
-            <div className="flex justify-center relative z-10">
-              <div className="w-1/2 bg-white bg-opacity-90 p-6 rounded-lg">
-                {/* Progress indicator */}
-                <div className="mb-12">
-                  <div className="flex items-center justify-center text-xs text-gray-500 mb-2">
-                    <span>Step 4 of 10</span>
-                  </div>
-                  <div className="w-full bg-gray-200 h-1 rounded-full">
-                    <div className="bg-black h-1 rounded-full" style={{ width: '40%' }}></div>
-                  </div>
+          <div className="max-w-4xl w-full relative mx-auto px-4">
+          {/* Background image positioned at window's bottom left */}
+          <div className="fixed bottom-0 left-0 z-0 opacity-80 hidden md:block">
+            <Image 
+              src="/images/form3.png" 
+              alt="World and Character illustration" 
+              width={400} 
+              height={400} 
+              className="object-contain"
+            />
+          </div>
+        
+          {/* World and Character form - centered */}
+          <div className="flex justify-center relative z-10">
+            <div className="w-full sm:w-3/4 md:w-2/3 lg:w-1/2 bg-white bg-opacity-90 sm:p-6 p-4 rounded-lg">
+              
+              {/* Progress indicator */}
+              <div className="mb-8 sm:mb-12">
+                <div className="flex items-center justify-center text-xs text-gray-500 mb-2">
+                  <span>Step 4 of 10</span>
                 </div>
-                <h2 className="text-4xl font-bold mb-2 text-gray-900">World and Character</h2>
-                <p className="text-sm text-gray-500 mb-8">
-                  Let&apos;s define the tone and format of your story.
-                </p>
-                
-                <div className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Setting</label>
-                    <Select value={setting} onValueChange={setSetting}>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="urban">Urban</SelectItem>
-                        <SelectItem value="rural">Rural</SelectItem>
-                        <SelectItem value="fantasy">Fantasy World</SelectItem>
-                        <SelectItem value="space">Outer Space</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Time Period</label>
-                    <Select value={timePeriod} onValueChange={setTimePeriod}>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="past">Historical Past</SelectItem>
-                        <SelectItem value="present">Present Day</SelectItem>
-                        <SelectItem value="future">Future</SelectItem>
-                        <SelectItem value="timeless">Timeless/Mythical</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Character Focus</label>
-                    <Select value={characterFocus} onValueChange={setCharacterFocus}>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="individual">Individual</SelectItem>
-                        <SelectItem value="group">Group/Ensemble</SelectItem>
-                        <SelectItem value="society">Society</SelectItem>
-                        <SelectItem value="nonhuman">Non-human</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div className="flex justify-between pt-4">
-                    <Button 
-                      variant="outline" 
-                      onClick={handleGoBack}
-                      className="px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-50 hover:text-gray-900"
-                    >
-                      Go Back
-                    </Button>
-                    <Button 
-                      onClick={handleContinue}
-                      className="px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800"
-                    >
-                      Continue
-                    </Button>
-                  </div>
+                <div className="w-full bg-gray-200 h-1 rounded-full">
+                  <div className="bg-black h-1 rounded-full" style={{ width: '40%' }}></div>
+                </div>
+              </div>
+        
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 text-gray-900">
+                World and Character
+              </h2>
+              <p className="text-sm text-gray-500 mb-6 sm:mb-8">
+                Let&apos;s define the tone and format of your story.
+              </p>
+        
+              <div className="space-y-6">
+                {/* Setting */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">Setting</label>
+                  <Select value={setting} onValueChange={setSetting}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="urban">Urban</SelectItem>
+                      <SelectItem value="rural">Rural</SelectItem>
+                      <SelectItem value="fantasy">Fantasy World</SelectItem>
+                      <SelectItem value="space">Outer Space</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+        
+                {/* Time Period */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">Time Period</label>
+                  <Select value={timePeriod} onValueChange={setTimePeriod}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="past">Historical Past</SelectItem>
+                      <SelectItem value="present">Present Day</SelectItem>
+                      <SelectItem value="future">Future</SelectItem>
+                      <SelectItem value="timeless">Timeless/Mythical</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+        
+                {/* Character Focus */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">Character Focus</label>
+                  <Select value={characterFocus} onValueChange={setCharacterFocus}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="individual">Individual</SelectItem>
+                      <SelectItem value="group">Group/Ensemble</SelectItem>
+                      <SelectItem value="society">Society</SelectItem>
+                      <SelectItem value="nonhuman">Non-human</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+        
+                {/* Navigation buttons */}
+                <div className="flex flex-col sm:flex-row justify-between pt-4 gap-3">
+                  <Button 
+                    variant="outline" 
+                    onClick={handleGoBack}
+                    className="px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-50 hover:text-gray-900"
+                  >
+                    Go Back
+                  </Button>
+                  <Button 
+                    onClick={handleContinue}
+                    className="px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800"
+                  >
+                    Continue
+                  </Button>
                 </div>
               </div>
             </div>
           </div>
+        </div>        
         )}
         
         {/* Screenplay step */}
         {currentStep === 'screenplay' && (
-          <div className="max-w-4xl w-full relative">
-            
-            {/* Background image positioned at window's bottom left */}
-            <div className="fixed bottom-0 left-0 z-0 opacity-80">
-              <Image 
-                src="/images/form4.png" 
-                alt="Film roll illustration" 
-                width={400} 
-                height={400} 
-                className="object-contain"
-              />
-            </div>
-            
-            {/* Screenplay form - centered */}
-            <div className="flex justify-center relative z-10">
-              <div className="w-1/2 bg-white bg-opacity-90 p-6 rounded-lg">
-                {/* Progress indicator */}
-                <div className="mb-12">
-                  <div className="flex items-center justify-center text-xs text-gray-500 mb-2">
-                    <span>Step 5 of 10</span>
-                  </div>
-                  <div className="w-full bg-gray-200 h-1 rounded-full">
-                    <div className="bg-black h-1 rounded-full" style={{ width: '50%' }}></div>
-                  </div>
+          <div className="max-w-4xl w-full relative mx-auto px-4">
+          {/* Background image positioned at window's bottom left */}
+          <div className="fixed bottom-0 left-0 z-0 opacity-80 hidden md:block">
+            <Image 
+              src="/images/form4.png" 
+              alt="Film roll illustration" 
+              width={400} 
+              height={400} 
+              className="object-contain"
+            />
+          </div>
+        
+          {/* Screenplay form - centered */}
+          <div className="flex justify-center relative z-10">
+            <div className="w-full sm:w-3/4 md:w-2/3 lg:w-1/2 bg-white bg-opacity-90 sm:p-6 p-4 rounded-lg">
+        
+              {/* Progress indicator */}
+              <div className="mb-8 sm:mb-12">
+                <div className="flex items-center justify-center text-xs text-gray-500 mb-2">
+                  <span>Step 5 of 10</span>
                 </div>
-                <h2 className="text-4xl font-bold mb-2 text-gray-900">Screenplay</h2>
-                <p className="text-sm text-gray-500 mb-8">
-                  Let&apos;s define the tone and format of your story.
-                </p>
-                
-                <div className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Writing Style</label>
-                    <Select value={writingStyle} onValueChange={setWritingStyle}>
-                      <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="classic">Classic</SelectItem>
-                        <SelectItem value="modern">Modern</SelectItem>
-                        <SelectItem value="experimental">Experimental</SelectItem>
-                        <SelectItem value="indie">Indie</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Notes</label>
-                    <Textarea 
-                      placeholder="Type your message here." 
-                      className="min-h-[120px] w-full p-3 border border-gray-300 rounded-md" 
-                      value={notes}
-                      onChange={(e) => setNotes(e.target.value)}
-                    />
-                  </div>
-                  
-                  <div className="flex justify-between pt-4">
+                <div className="w-full bg-gray-200 h-1 rounded-full">
+                  <div className="bg-black h-1 rounded-full" style={{ width: '50%' }}></div>
+                </div>
+              </div>
+        
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 text-gray-900">
+                Screenplay
+              </h2>
+              <p className="text-sm text-gray-500 mb-6 sm:mb-8">
+                Let&apos;s define the tone and format of your story.
+              </p>
+        
+              <div className="space-y-6">
+                {/* Writing Style */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">Writing Style</label>
+                  <Select value={writingStyle} onValueChange={setWritingStyle}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="classic">Classic</SelectItem>
+                      <SelectItem value="modern">Modern</SelectItem>
+                      <SelectItem value="experimental">Experimental</SelectItem>
+                      <SelectItem value="indie">Indie</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+        
+                {/* Notes */}
+                <div>
+                  <label className="block text-sm font-medium mb-2">Notes</label>
+                  <Textarea 
+                    placeholder="Type your message here." 
+                    className="min-h-[120px] w-full p-3 border border-gray-300 rounded-md" 
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                  />
+                </div>
+        
+                {/* Navigation buttons */}
+                <div className="flex flex-col sm:flex-row justify-between pt-4 gap-3">
+                  <Button 
+                    variant="outline" 
+                    onClick={handleGoBack}
+                    className="px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-50 hover:text-gray-900"
+                  >
+                    Go Back
+                  </Button>
+                  <Link href="/story-mode-scenes">
                     <Button 
-                      variant="outline" 
-                      onClick={handleGoBack}
-                      className="px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-50 hover:text-gray-900"
+                      className="w-full px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800"
                     >
-                      Go Back
+                      Generate Screenplay
                     </Button>
-                    <Link href="/story-mode-scenes">
-                      <Button 
-                        className="px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800"
-                      >
-                        Generate Screen play
-                      </Button>
-                    </Link>
-                  </div>
-                  
-                  <div className="text-xs text-gray-500 text-center mt-4">
-                    This will take 30-60 seconds to generate your personalized screenplay.
-                  </div>
+                  </Link>
+                </div>
+        
+                <div className="text-xs text-gray-500 text-center mt-4">
+                  This will take 30-60 seconds to generate your personalized screenplay.
                 </div>
               </div>
             </div>
           </div>
+        </div>
         )}
-        
       </main>
     </div>
   );

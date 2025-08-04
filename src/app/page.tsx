@@ -16,7 +16,7 @@ export default function Home() {
     //     router.push("/login")
     //   }
     // }
-    router.push("/story-mode-chat")
+    router.push("/home")
   }, [isLoggedIn, loading, router])
 
   return (

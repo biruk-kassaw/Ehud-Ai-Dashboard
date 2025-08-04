@@ -32,7 +32,14 @@ export default function ChatPage() {
           <Button variant="outline" className="bg-[#0B0F1C] text-white hover:bg-[#0B0F1C]/90">
             Upgrade premium
           </Button>
-          <div className="w-8 h-8 rounded-full bg-gray-200" />
+          <Link href="/my-profile">
+            <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </div>
+          </Link>
         </div>
       </header>
 
@@ -50,7 +57,7 @@ export default function ChatPage() {
         <div className="relative z-10">
           <h2 className="text-4xl font-bold mb-2">Create your story</h2>
           <p className="text-md mb-6">Generate images from text prompts & styles</p>
-          <Link href="/chat">
+          <Link href="/story-mode-chat">
             <Button className="bg-transparent text-white border border-white hover:bg-white/10">
               Create my project
             </Button>
@@ -76,9 +83,11 @@ export default function ChatPage() {
                 <h4 className="text-xl font-bold mb-1">Image</h4>
                 <p className="text-sm">Generate images from text prompts & styles</p>
               </div>
-              <Button className="bg-transparent text-white border border-white hover:bg-white/10">
-                Open
-              </Button>
+              <Link href="/generate-scene-image">
+                <Button className="bg-transparent text-white border border-white hover:bg-white/10">
+                  Open
+                </Button>
+              </Link>
             </div>
           </Card>
 
@@ -96,11 +105,13 @@ export default function ChatPage() {
             <div className="absolute bottom-0 left-0 p-6 text-white flex items-center justify-between w-full">
               <div>
                 <h4 className="text-xl font-bold mb-1">Video</h4>
-                <p className="text-sm">Generate images from text prompts & styles</p>
+                <p className="text-sm">Generate video from text prompts & styles</p>
               </div>
-              <Button className="bg-transparent text-white border border-white hover:bg-white/10">
-                Open
-              </Button>
+              <Link href="/generate-scene-video">
+                <Button className="bg-transparent text-white border border-white hover:bg-white/10">
+                  Open
+                </Button>
+              </Link>
             </div>
           </Card>
         </div>

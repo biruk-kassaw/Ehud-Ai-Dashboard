@@ -16,7 +16,7 @@ export default function VideoGenerationPage() {
         { value: "kling", label: "Kling", description: "High-quality image generation" },
       ];
   return (
-    <div className="min-h-screen bg-white p-8">
+    <div className="min-h-screen bg-white p-4 sm:p-8">
       {/* Header */}
       <div className="bg-black text-white p-4 rounded-lg">
         <h1 className="text-lg font-medium">Scene 1 Lorem ipsum dolor sit</h1>
@@ -32,7 +32,7 @@ export default function VideoGenerationPage() {
       </div>
       
       {/* Main content */}
-      <div className="p-4">
+      <div className="">
         <div className="border border-gray-200 rounded-lg overflow-hidden">
           {/* Action buttons */}
           <div className="p-4 border-b border-gray-200 flex gap-4">
@@ -48,7 +48,7 @@ export default function VideoGenerationPage() {
           
           {/* Video grid */}
           <div className="p-4">
-            <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               {/* Video 1 */}
               <div className="relative rounded-lg overflow-hidden">
                 <video 
@@ -108,7 +108,7 @@ export default function VideoGenerationPage() {
               <p>Lorem ipsum dolor sit amet consectetur. Cursus ornare mi consectetur neque at tortor erat fermentum.Lorem ipsum dolor sit amet consectetur. Cursus ornare mi consectetur neque at tortor erat fermentum.</p>
             </div>
             
-            <div className='p-4'>
+            <div className=''>
                 <div className="bg-white border border-gray-300 rounded-2xl p-3 overflow-hidden w-full">
                     <div className="relative">
                         <Textarea 
