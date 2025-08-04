@@ -29,7 +29,7 @@ export default function ChatPage() {
       <header className="flex items-center justify-between py-8">
         <h1 className="text-3xl font-bold">EhudAI</h1>
         <div className="flex items-center gap-4">
-          <Button variant="outline" className="bg-[#0B0F1C] text-white hover:bg-[#0B0F1C]/90">
+          <Button variant="outline" className="bg-[#0B0F1C] text-white hover:bg-[#0B0F1C]/90 rounded">
             Upgrade premium
           </Button>
           <Link href="/my-profile">
@@ -50,7 +50,7 @@ export default function ChatPage() {
           muted
           loop
           playsInline
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover rounded"
           src="https://tsgxefnybjfdweujuafo.supabase.co/storage/v1/object/public/ehudaivideos//woman.mp4"
         />
         <div className="absolute inset-0 bg-black/30" />
@@ -58,7 +58,7 @@ export default function ChatPage() {
           <h2 className="text-4xl font-bold mb-2">Create your story</h2>
           <p className="text-md mb-6">Generate images from text prompts & styles</p>
           <Link href="/story-mode-chat">
-            <Button className="bg-transparent text-white border border-white hover:bg-white/10">
+            <Button className="bg-transparent text-white border border-white hover:bg-white/10 rounded">
               Create my project
             </Button>
           </Link>
@@ -74,7 +74,7 @@ export default function ChatPage() {
           {/* Image Card */}
           <Card className="relative h-[270px] overflow-hidden group cursor-pointer">
             <div 
-              className="absolute inset-0 bg-cover bg-center"
+              className="absolute inset-0 bg-cover bg-center rounded"
               style={{ backgroundImage: 'url(/images/vrimage.png)' }}
             />
             <div className="absolute inset-0 bg-black/50" />
@@ -84,7 +84,7 @@ export default function ChatPage() {
                 <p className="text-sm">Generate images from text prompts & styles</p>
               </div>
               <Link href="/generate-scene-image">
-                <Button className="bg-transparent text-white border border-white hover:bg-white/10">
+                <Button className="bg-transparent text-white border border-white hover:bg-white/10 rounded">
                   Open
                 </Button>
               </Link>
@@ -98,7 +98,7 @@ export default function ChatPage() {
               muted
               loop
               playsInline
-              className="absolute inset-0 w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-cover rounded"
               src="https://tsgxefnybjfdweujuafo.supabase.co/storage/v1/object/public/ehudaivideos//woman.mp4"
             />
             <div className="absolute inset-0 bg-black/50" />
@@ -108,7 +108,7 @@ export default function ChatPage() {
                 <p className="text-sm">Generate video from text prompts & styles</p>
               </div>
               <Link href="/generate-scene-video">
-                <Button className="bg-transparent text-white border border-white hover:bg-white/10">
+                <Button className="bg-transparent text-white border border-white hover:bg-white/10 rounded">
                   Open
                 </Button>
               </Link>
@@ -126,7 +126,7 @@ export default function ChatPage() {
             { title: 'Voice Generator', description: 'Generate images from text prompts & styles', Icon: Mic2 },
             { title: 'Lipsync', description: 'Generate images from text prompts & styles', Icon: Speech },
           ].map((feature, index) => (
-            <Card key={index} className="p-3 flex items-center gap-2 bg-gray-100 backdrop-blur-sm border border-black/10">
+            <Card key={index} className="p-3 flex items-center gap-2 bg-gray-100 backdrop-blur-sm border border-black/10 rounded">
               <div className="flex items-center gap-2">
                 <feature.Icon className="w-4 h-4" />
                 <div>
@@ -134,7 +134,7 @@ export default function ChatPage() {
                   <p className="text-sm">{feature.description}</p>
                 </div>
                 <div>
-                  <Button variant="outline" className="ml-auto bg-white border-black/10 hover:bg-white/10 hover:border-black/20 hover:text-black">
+                  <Button variant="outline" className="ml-auto bg-white border-black/10 hover:bg-white/10 hover:border-black/20 hover:text-black rounded">
                     Open
                   </Button>
                 </div>
